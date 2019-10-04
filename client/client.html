@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Our simple HTTP server</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script type="text/babel">
+
+    //Response Handling (Response and (parse or not))
+    const handleResponse = (xhr) => {
+        
+    //Json or XML
+    const type = xhr.getResponseHeader('content-type');
+    
+    //Grab content section
+    const content = document.querySelector('#content');        
+    content.innerHTML = '';
+        
+        
+    //Status
+    switch(xhr.status) {
+        case 200: //if success
+          content.innerHTML = `<b>Success</b><br><br>`;
+          break;
+        case 201: //if created
+          content.innerHTML = '<b>Create</b><br>';
+          break;
+        case 400: //if bad request
+          content.innerHTML = `<b>Bad Request</b><br>`;
+          break;
+        case 401: //if Unauthorized
+          content.innerHTML = `<b>Unauthorized</b><br>`;
+          break;
+        case 403: //if Forbidden
+          content.innerHTML = `<b>Forbidden</b><br>`;
+          break;
+        case 500: //if InternalError
+          content.innerHTML = `<b>Internal Server Error</b><br>`;
+          break;
+        case 501: //if Not Implemented
+          content.innerHTML = `<b>Not Implemented</b><br>`;
+          break;
+        case 404: //if not found
+          content.innerHTML = `<b>Resource Not Found</b><br>`;
+          break;
+        default: //any other status
+          content.innerHTML = `Error code not implemented by client.<br>`;
+          break;
+      }
+        
+        
+        
+    //Parse result
+    
+        //parse the object and print it to the console
+            const obj = JSON.parse(xhr.response);
+            console.dir(obj);
+        
+        //Set HTML with data
+        content.innerHTML += `Number: ${obj.Number}`;
+        content.innerHTML += `<br>Rank: ${obj.Rank}`;
+        content.innerHTML += `<br>Unit: ${obj.Unit}`;
+        //if (obj.id)
+        //content.innerHTML += `Error: ${obj.id}`;
+        
+    }; //End Response Handle
+
+
+    //function to send an xhr request
+    const sendAjax = (url, acceptedType) => {
+      //create a new xhr (ajax) request. 
+      const xhr = new XMLHttpRequest();
+      //set the xhr to a GET request to a certain URL
+      xhr.open('GET', url);
+      //Set the accept headers to the desired response mime type
+      //Server does NOT have to support this. It is a gentle request.
+      xhr.setRequestHeader ("Accept", acceptedType);
+      //When the xhr loads, call handleResponse and pass the xhr object
+      xhr.onload = () => handleResponse(xhr);
+      
+      //send our ajax request to the server
+      xhr.send();
+        console.log(url,acceptedType);
+    };
+
+    const init = () => {
+      const sendButton = document.querySelector("#send");
+      const randomButton = document.querySelector("#random");
+      
+      const sendRequest = () => {
+          //let rng = Math.floor(Math.random() * document.querySelector("#page").length);
+          //console.log(rng);
+          let page = document.querySelector("#page").value;
+          //let type = document.querySelector("#type").value;
+          sendAjax(page);
+      }
+      
+      sendButton.addEventListener('click', sendRequest);
+    };
+    window.onload = init;
+    
+
+    
+
+        
+  </script>
+    
+  <style>
+    
+  html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#top {
+  text-align: center;
+  margin: 0 auto;
+}
+
+#top h1 {
+  font-size: 2em;
+}
+
+#content {
+  margin-top: 100px;
+  font-size: 2em;
+  text-align: center;
+}
+      
+  </style>
+    
+    
+</head>
+<body>
+  <section id="top">
+    <h3>Status Code Tests</h3>
+    <select id="page">
+      <option value="/appo">Appo</option>
+      <option value="/ayar">Ayar</option>
+      <option value="/boomer">Boomer</option>
+      <option value="/boro">Boro</option>
+      <option value="/bow">Bow</option>
+      >
+    </select>
+    <!--<select id="type">
+      <option value="application/json">JSON</option>
+      <option value="text/xml">XML</option>
+    </select>-->
+    <button id="send">Send</button>
+    <button id="random">Random</button>
+  </section>
+  <section id="content">
+  </section>
+</body>
+</html>

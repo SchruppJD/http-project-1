@@ -1,0 +1,30 @@
+{
+  "name": "http-project-1",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.10.0",
+    "npm": "6.10.3"
+  },
+  "description": "API",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"No Tests\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SchruppJD/http-project-1.git"
+  },
+  "author": "James Schrupp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SchruppJD/http-project-1/issues"
+  },
+  "homepage": "https://github.com/SchruppJD/http-project-1#readme",
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}

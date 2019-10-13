@@ -49,7 +49,6 @@ const cloneArchive = {
 
 const getClone = (request, response, search) => {
    if(search && cloneArchive[search.split("=")[1]]){
-      let cloneSearch = search.split("=")[1];
       let clone = cloneArchive[search.split("=")[1]]
       response.writeHead(200, { 'Content-Type': 'application/json' });
       const stringMessage = JSON.stringify(clone);

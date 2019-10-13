@@ -6,10 +6,23 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // Redirects request
 const urlStruct = {
+    
+ 'GET': {
   '/': responseHandler.getIndex,
   '/style.css': responseHandler.getCSS,
   '/getClone': responseHandler.getClone,
    notFound: responseHandler.getNotFound,
+  },
+    
+ 'HEAD': {
+  '/getClone': responseHandler.getCloneMeta,
+   notFound: responseHandler.getNotFoundMeta,
+ },
+    
+ 'POST': {
+     
+ },
+    
 };
 
 const onRequest = (request, response) => {
@@ -21,18 +34,18 @@ const onRequest = (request, response) => {
   // grab the 'accept' header
   // const acceptedType = request.headers.accept;
 
-  // Check URL and call function if applicable, else index
-  // let clone = parsedUrl.search;
-
-  if (urlStruct[parsedUrl.pathname]) {
+  
+    
+    
+  if (urlStruct[request.method][parsedUrl.pathname]) {
       if (parsedUrl.search){
-          urlStruct[parsedUrl.pathname](request,response,parsedUrl.search);
+          urlStruct[request.method][parsedUrl.pathname](request,response,parsedUrl.search);
       }
       else{
-          urlStruct[parsedUrl.pathname](request, response);
+          urlStruct[request.method][parsedUrl.pathname](request, response);
       }
   } else {
-    urlStruct.notFound(request, response);
+    urlStruct[request.method].notFound(request, response);
   }
 };
 

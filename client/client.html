@@ -8,7 +8,7 @@
   <script type="text/babel">
 
     //Response Handling (Response and (parse or not))
-    const handleResponse = (xhr) => {
+    const handleResponse = (xhr, parseResponse) => {
         
     //Json or XML
     const type = xhr.getResponseHeader('content-type');
@@ -26,6 +26,8 @@
         case 201: //if created
           content.innerHTML = '<b>Create</b><br>';
           break;
+        case 204: //if updated without going to page
+          content.innerHTML = '<b>Updated Successfully</b><br>';
         case 400: //if bad request
           content.innerHTML = `<b>Bad Request</b><br>`;
           break;
@@ -52,10 +54,10 @@
         
         
     //Parse result
-    
+    if(parseResponse) {
         //parse the object and print it to the console
-            const obj = JSON.parse(xhr.response);
-            console.dir(obj);
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
         
         //Set HTML with data
         if(obj.Name)content.innerHTML += `Name: ${obj.Name}`;
@@ -65,40 +67,59 @@
         //if (obj.id)
         //content.innerHTML += `Error: ${obj.id}`;
         
-    }; //End Response Handle
+        } else {
+            //No Data
+            content.innerHTML += '<p>Meta Data Recieved</p>';
+        } 
+        
+    };//End Response Handle
+
 
 
     //function to send an xhr request
-    const sendAjax = (url, acceptedType) => {
+    const sendAjax = (e, method, url) => {
       //create a new xhr (ajax) request. 
       const xhr = new XMLHttpRequest();
-      //set the xhr to a GET request to a certain URL
-      xhr.open('GET', url);
+      //set the xhr request to a certain method and URL
+      xhr.open(method, url);
       //Set the accept headers to the desired response mime type
       //Server does NOT have to support this. It is a gentle request.
-      xhr.setRequestHeader ("Accept", acceptedType);
-      //When the xhr loads, call handleResponse and pass the xhr object
-      xhr.onload = () => handleResponse(xhr);
+      xhr.setRequestHeader ('Accept', 'application/json');
       
+        
+      //GET or HEAD
+      if(method == 'GET'){
+      //When the xhr loads, call handleResponse and pass the xhr object
+        xhr.onload = () => handleResponse(xhr, true);
+      } else {
+        xhr.onload = () => handleResponse(xhr, false);
+      }
+        
       //send our ajax request to the server
       xhr.send();
-        console.log(url,acceptedType);
+      
+      //cancel browser's default action
+      e.preventDefault();
+      //DEBUG
+      console.log(url,'application/json');
     };
 
     const init = () => {
       const sendButton = document.querySelector("#send");
-      const randomButton = document.querySelector("#random");
+      //const randomButton = document.querySelector("#random");
       
-      const sendRequest = () => {
-          //let rng = Math.floor(Math.random() * document.querySelector("#page").length);
-          //console.log(rng);
+      const sendRequest = (e) => {
+          //Method
+          let method = document.querySelector("#method").value;
+          //URL
           let page = "/getClone?clone=" + document.querySelector("#page").value;
           //let type = document.querySelector("#type").value;
-          sendAjax(page);
+          sendAjax(e, method, page);
       }
       
       sendButton.addEventListener('click', sendRequest);
     };
+
     window.onload = init;
     
 
@@ -138,20 +159,24 @@
 <body>
   <section id="top">
     <h3>Clone Archives</h3>
+    <select id="method">
+      <option value="GET">GET</option>
+      <option value="HEAD">HEAD</option>
+    </select>
+      
     <select id="page">
       <option value="appo">Appo</option>
       <option value="ayar">Ayar</option>
       <option value="boomer">Boomer</option>
       <option value="boro">Boro</option>
       <option value="bow">Bow</option>
-      >
     </select>
     <!--<select id="type">
       <option value="application/json">JSON</option>
       <option value="text/xml">XML</option>
     </select>-->
     <button id="send">Send</button>
-    <button id="random">Random</button>
+    <!--<button id="random">Random</button>-->
   </section>
   <section id="content">
   </section>

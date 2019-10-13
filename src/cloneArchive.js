@@ -47,6 +47,23 @@ const cloneArchive = {
 
 };
 
+
+
+
+///GET Requests
+
+const respondJSON = (request, response, status, object) => {
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    
+    response.writeHead(status, headers);
+    response.write(JSON.stringify(object));
+    response.end();
+}
+
+
+
 const getClone = (request, response, search) => {
    if(search && cloneArchive[search.split("=")[1]]){
       let clone = cloneArchive[search.split("=")[1]]
@@ -66,7 +83,6 @@ const getClone = (request, response, search) => {
       response.end();
    }
 }
-
 
 const getIndex = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -91,9 +107,42 @@ const getNotFound = (request, response) => {
     response.end();
 };
 
+//GET Requests
+
+/// HEAD requests
+
+const respondJSONMeta = (request, response, status) => {
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    
+    response.writeHead(status, headers);
+    response.end();
+}
+
+const getCloneMeta = (request, response, search) => {
+    
+    return respondJSONMeta(request, response, 200);
+    
+}
+
+const getNotFoundMeta = (request, response) => {
+    
+    respondJSONMeta(request, response, 404);
+}
+
+//HEAD Requests
+
 module.exports = {
+  //GET
   getIndex,
   getCSS,
   getClone,
   getNotFound,
+
+  //HEAD
+  getCloneMeta,
+  getNotFoundMeta,
+    
+  //POST
 };

@@ -51,7 +51,7 @@ const cloneArchive = {
 
 
 ///GET Requests
-
+/*
 const respondJSON = (request, response, status, object) => {
     const headers = {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const respondJSON = (request, response, status, object) => {
     response.write(JSON.stringify(object));
     response.end();
 }
-
+*/
 
 
 const getClone = (request, response, search) => {
@@ -121,14 +121,20 @@ const respondJSONMeta = (request, response, status) => {
 }
 
 const getCloneMeta = (request, response, search) => {
-    
-    return respondJSONMeta(request, response, 200);
-    
+    if(search){
+        if(cloneArchive[search.split("=")[1]]){
+            return respondJSONMeta(request, response, 200);
+        } else {
+            return respondJSONMeta(request, response, 400);
+        }
+    } else {
+        return respondJSONMeta(request, response, 400);
+    }
 }
 
 const getNotFoundMeta = (request, response) => {
     
-    respondJSONMeta(request, response, 404);
+    return respondJSONMeta(request, response, 404);
 }
 
 //HEAD Requests

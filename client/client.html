@@ -58,9 +58,10 @@
             console.dir(obj);
         
         //Set HTML with data
-        content.innerHTML += `Number: ${obj.Number}`;
-        content.innerHTML += `<br>Rank: ${obj.Rank}`;
-        content.innerHTML += `<br>Unit: ${obj.Unit}`;
+        if(obj.Name)content.innerHTML += `Name: ${obj.Name}`;
+        if(obj.Number)content.innerHTML += `<br>Number: ${obj.Number}`;
+        if(obj.Rank)content.innerHTML += `<br>Rank: ${obj.Rank}`;
+        if(obj.Unit)content.innerHTML += `<br>Unit: ${obj.Unit}`;
         //if (obj.id)
         //content.innerHTML += `Error: ${obj.id}`;
         
@@ -91,7 +92,7 @@
       const sendRequest = () => {
           //let rng = Math.floor(Math.random() * document.querySelector("#page").length);
           //console.log(rng);
-          let page = document.querySelector("#page").value;
+          let page = "/getClone?clone=" + document.querySelector("#page").value;
           //let type = document.querySelector("#type").value;
           sendAjax(page);
       }
@@ -136,13 +137,13 @@
 </head>
 <body>
   <section id="top">
-    <h3>Status Code Tests</h3>
+    <h3>Clone Archives</h3>
     <select id="page">
-      <option value="/appo">Appo</option>
-      <option value="/ayar">Ayar</option>
-      <option value="/boomer">Boomer</option>
-      <option value="/boro">Boro</option>
-      <option value="/bow">Bow</option>
+      <option value="appo">Appo</option>
+      <option value="ayar">Ayar</option>
+      <option value="boomer">Boomer</option>
+      <option value="boro">Boro</option>
+      <option value="bow">Bow</option>
       >
     </select>
     <!--<select id="type">

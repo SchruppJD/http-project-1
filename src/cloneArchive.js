@@ -13,6 +13,7 @@ const cloneArchive = {
   },
 
   appo: {
+    Name: 'Appo',
     Number: 'CC-1110',
     Rank: 'Senior Commander',
     Unit: '501st',
@@ -46,13 +47,26 @@ const cloneArchive = {
 
 };
 
-// const getClone = (request, response) => {
-//    let clone = request.
-//    response.writeHead(200, { 'Content-Type': 'application/json' });
-//    const stringMessage = JSON.stringify(cloneArchive[clone]);
-//    response.write(stringMessage);
-//    response.end();
-// }
+const getClone = (request, response, search) => {
+   if(search && cloneArchive[search.split("=")[1]]){
+      let cloneSearch = search.split("=")[1];
+      let clone = cloneArchive[search.split("=")[1]]
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      const stringMessage = JSON.stringify(clone);
+      response.write(stringMessage);
+      response.end();
+   }
+   else {
+      const badRequest = {
+      message: 'Missing valid query parameter. query = ?*="Name of Clone" ',
+      id: 'badRequest',
+      };
+      const stringMessage = JSON.stringify(badRequest);
+      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.write(stringMessage);
+      response.end();
+   }
+}
 
 
 const getIndex = (request, response) => {
@@ -67,48 +81,20 @@ const getCSS = (request, response) => {
   response.end();
 };
 
-const getAppo = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  const stringMessage = JSON.stringify(cloneArchive.appo);
-  response.write(stringMessage);
-  response.end();
+const getNotFound = (request, response) => {
+    const notFound = {
+      message: 'Page Requested not Found.',
+      id: 'notFound',
+      };
+    const stringMessage = JSON.stringify(notFound);
+    response.writeHead(404, { 'Content-Type': 'application/json' });
+    response.write(stringMessage);
+    response.end();
 };
-
-const getAyar = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  const stringMessage = JSON.stringify(cloneArchive.ayar);
-  response.write(stringMessage);
-  response.end();
-};
-
-const getBoomer = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  const stringMessage = JSON.stringify(cloneArchive.boomer);
-  response.write(stringMessage);
-  response.end();
-};
-
-const getBoro = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  const stringMessage = JSON.stringify(cloneArchive.boro);
-  response.write(stringMessage);
-  response.end();
-};
-
-const getBow = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  const stringMessage = JSON.stringify(cloneArchive.bow);
-  response.write(stringMessage);
-  response.end();
-};
-
 
 module.exports = {
   getIndex,
   getCSS,
-  getAppo,
-  getAyar,
-  getBoomer,
-  getBoro,
-  getBow,
+  getClone,
+  getNotFound,
 };

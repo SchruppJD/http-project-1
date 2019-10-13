@@ -8,12 +8,8 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
   '/': responseHandler.getIndex,
   '/style.css': responseHandler.getCSS,
-  '/appo': responseHandler.getAppo,
-  '/ayar': responseHandler.getAyar,
-  '/boomer': responseHandler.getBoomer,
-  '/boro': responseHandler.getBoro,
-  '/bow': responseHandler.getBow,
-
+  '/getClone': responseHandler.getClone,
+   notFound: responseHandler.getNotFound,
 };
 
 const onRequest = (request, response) => {
@@ -29,9 +25,14 @@ const onRequest = (request, response) => {
   // let clone = parsedUrl.search;
 
   if (urlStruct[parsedUrl.pathname]) {
-    urlStruct[parsedUrl.pathname](request, response);
+      if (parsedUrl.search){
+          urlStruct[parsedUrl.pathname](request,response,parsedUrl.search);
+      }
+      else{
+          urlStruct[parsedUrl.pathname](request, response);
+      }
   } else {
-    // urlStruct.notFound(request, response, acceptedType);
+    urlStruct.notFound(request, response);
   }
 };
 

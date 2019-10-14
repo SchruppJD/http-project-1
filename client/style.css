@@ -10,8 +10,12 @@ html, body {
   margin: 0 auto;
 }
 
-#top h1 {
+#top h3 {
   font-size: 2em;
+}
+
+#title h1 {
+  font-size: 4em;
 }
 
 #content {

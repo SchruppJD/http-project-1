@@ -17,17 +17,29 @@
     const content = document.querySelector('#content');        
     content.innerHTML = '';
         
-        
+    console.log(xhr.status);
     //Status
     switch(xhr.status) {
         case 200: //if success
           content.innerHTML = `<b>Success</b><br><br>`;
           break;
         case 201: //if created
-          content.innerHTML = '<b>Create</b><br>';
+          content.innerHTML = `<b>Created</b><br>`;
+            
+            const obj = JSON.parse(xhr.response);
+            let value = '';
+            if(obj.Number)value = obj.Number;
+            if(obj.Name)value = obj.Name;
+            let el = document.querySelector('#page');
+            let opt = document.createElement('option');
+            opt.appendChild( document.createTextNode(value));
+            opt.value = value;
+            el.appendChild(opt);
+            el.selectedIndex= el.childElementCount - 1;
           break;
         case 204: //if updated without going to page
-          content.innerHTML = '<b>Updated Successfully</b><br>';
+          content.innerHTML = `<b>Updated Successfully</b><br>`;
+          break;
         case 400: //if bad request
           content.innerHTML = `<b>Bad Request</b><br>`;
           break;
@@ -54,7 +66,7 @@
         
         
     //Parse result
-    if(parseResponse) {
+    if(parseResponse && xhr.response) {
         //parse the object and print it to the console
         const obj = JSON.parse(xhr.response);
         console.dir(obj);
@@ -74,10 +86,8 @@
         
     };//End Response Handle
 
-
-
     //function to send an xhr request
-    const sendAjax = (e, method, url) => {
+    const sendAjax = (e, method, url, data) => {
       //create a new xhr (ajax) request. 
       const xhr = new XMLHttpRequest();
       //set the xhr request to a certain method and URL
@@ -87,24 +97,51 @@
       xhr.setRequestHeader ('Accept', 'application/json');
       
         
-      //GET or HEAD
+      //GET or HEAD or POST
       if(method == 'GET'){
       //When the xhr loads, call handleResponse and pass the xhr object
         xhr.onload = () => handleResponse(xhr, true);
-      } else {
+      } else if (method == 'HEAD'){
         xhr.onload = () => handleResponse(xhr, false);
+      } else if (method == 'POST'){
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = () => handleResponse(xhr, true);
+          
+          
+          
+          //grab the form's name and age fields so we can check user input
+            const nameField = nameForm.querySelector('#nameField');
+            const numberField = nameForm.querySelector('#numberField');
+            const rankField = nameForm.querySelector('#rankField');
+            const unitField = nameForm.querySelector('#unitField');
+          
+          const formData = `name=${nameField.value}&number=${numberField.value}&rank=${rankField.value}&unit=${unitField.value}`;
+          
+          //Send Request with Data
+          xhr.send(formData);
+          e.preventDefault();
+          console.log("POST",formData);
+          return false;
       }
         
       //send our ajax request to the server
       xhr.send();
       
       //cancel browser's default action
-      e.preventDefault();
+      if (e){e.preventDefault();}
       //DEBUG
-      console.log(url,'application/json');
+      console.log(url);
     };
 
     const init = () => {
+     //addClone Form
+     const nameForm = document.querySelector('#nameForm');
+     
+     const addClone = (e) => sendAjax(e, 'POST', '/addClone', nameForm);
+      
+     nameForm.addEventListener('submit', addClone);
+        
+        
       const sendButton = document.querySelector("#send");
       //const randomButton = document.querySelector("#random");
       
@@ -157,8 +194,11 @@
     
 </head>
 <body>
+  <section id="title">
+    <h1>Clone Archives</h1>
+  </section>
   <section id="top">
-    <h3>Clone Archives</h3>
+    
     <select id="method">
       <option value="GET">GET</option>
       <option value="HEAD">HEAD</option>
@@ -177,6 +217,21 @@
     </select>-->
     <button id="send">Send</button>
     <!--<button id="random">Random</button>-->
+  </section>
+  <section id="top">
+      <p>Add your own Clone to the list!</p>
+  <form id="nameForm" action="/addClone" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="number">Number: </label>
+      <input id="numberField" type="number" name="number" min="0"/>
+      <br>
+      <label for="rank">Rank: </label>
+      <input id="rankField" type="text" name="rank" />
+      <label for="unit">Unit: </label>
+      <input id="unitField" type="text" name="unit" />
+      <input type="submit" value="Add Clone" />
+    </form>  
   </section>
   <section id="content">
   </section>

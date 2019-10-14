@@ -6,23 +6,23 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // Redirects request
 const urlStruct = {
-    
- 'GET': {
-  '/': responseHandler.getIndex,
-  '/style.css': responseHandler.getCSS,
-  '/getClone': responseHandler.getClone,
-   notFound: responseHandler.getNotFound,
+
+  GET: {
+    '/': responseHandler.getIndex,
+    '/style.css': responseHandler.getCSS,
+    '/getClone': responseHandler.getClone,
+    notFound: responseHandler.getNotFound,
   },
-    
- 'HEAD': {
-  '/getClone': responseHandler.getCloneMeta,
-   notFound: responseHandler.getNotFoundMeta,
- },
-    
- 'POST': {
-     
- },
-    
+
+  HEAD: {
+    '/getClone': responseHandler.getCloneMeta,
+    notFound: responseHandler.getNotFoundMeta,
+  },
+
+  POST: {
+    '/addClone': responseHandler.handlePost,
+  },
+
 };
 
 const onRequest = (request, response) => {
@@ -34,20 +34,18 @@ const onRequest = (request, response) => {
   // grab the 'accept' header
   // const acceptedType = request.headers.accept;
 
-  
-    
-    
+
   if (urlStruct[request.method][parsedUrl.pathname]) {
-      if (parsedUrl.search){
-          urlStruct[request.method][parsedUrl.pathname](request,response,parsedUrl.search);
-      }
-      else{
-          urlStruct[request.method][parsedUrl.pathname](request, response);
-      }
+    if (parsedUrl.search) {
+      urlStruct[request.method][parsedUrl.pathname](request, response, parsedUrl.search);
+    } else {
+      urlStruct[request.method][parsedUrl.pathname](request, response);
+    }
   } else {
     urlStruct[request.method].notFound(request, response);
   }
 };
+
 
 http.createServer(onRequest).listen(port);
 

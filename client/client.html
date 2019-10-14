@@ -35,7 +35,27 @@
             opt.appendChild( document.createTextNode(value));
             opt.value = value;
             el.appendChild(opt);
-            el.selectedIndex= el.childElementCount - 1;
+            el.selectedIndex = el.childElementCount - 1;
+                        
+            let el2 = document.querySelector('#col');
+            let el3 = document.querySelector('#colm');
+            
+            let newButton = document.createElement('button');
+            
+            newButton.className = "btn";
+            newButton.value = value;
+            newButton.appendChild(document.createTextNode(value));
+            if(el2.childElementCount == el3.childElementCount){
+                el2.appendChild(document.createElement('br'));
+                el2.appendChild(newButton);
+            }
+            else{
+                el3.appendChild(document.createElement('br'));
+                el3.appendChild(newButton);
+            }
+            
+            newButton.addEventListener('click', (e) => sendAjax(e, 'GET', "/getClone?clone=" + newButton.value));
+            
           break;
         case 204: //if updated without going to page
           content.innerHTML = `<b>Updated Successfully</b><br>`;
@@ -155,6 +175,16 @@
       }
       
       sendButton.addEventListener('click', sendRequest);
+        
+        const buttons = document.querySelectorAll(".btn");
+        console.log(buttons);
+        for (let i = 0; i < buttons.length; i++) {
+            let self = buttons[i];
+        
+            self.addEventListener('click', (e) => sendAjax(e, 'GET', "/getClone?clone=" + self.value));
+        }
+        
+        
     };
 
     window.onload = init;
@@ -165,40 +195,54 @@
         
   </script>
     
-  <style>
-   /* 
-  html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
 
-#top {
-  text-align: center;
-  margin: 0 auto;
-}
-
-#top h1 {
-  font-size: 2em;
-}
-
-#content {
-  margin-top: 100px;
-  font-size: 2em;
-  text-align: center;
-}
-      */
-  </style>
+ 
     
     
 </head>
 <body>
   <section id="title">
     <h1>Clone Archives</h1>
-  </section>
-  <section id="top">
+    </section>   
     
+    <section id="content">
+      
+</section> 
+    
+    <div id='list' class="column">
+<div class="row">
+  <div id='col' class="column" style="background-color:#aaa;">
+    <button  class="btn" value="appo">Appo</button>
+    <br><button class="btn" value="ayar">Ayar</button>
+      <br><button class="btn" value="bow">Bow</button>
+  </div>
+  <div id='colm' class="column" style="background-color:#aaa;">
+    <button class="btn" value="boomer">Boomer</button>
+    <br><button class="btn" value="boro">Boro</button>
+  </div>
+</div>
+</div> 
+
+     
+ <div class="sticky" style="background-color:#aaa;">    
+<section id="add">
+      <p>Add your own Clone to the list!</p>
+  <form id="nameForm" action="/addClone" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="number">Number: </label>
+      <input id="numberField" type="number" name="number" min="0"/>
+      <br>
+      <label for="rank">Rank: </label>
+      <input id="rankField" type="text" name="rank" />
+      <label for="unit">Unit: </label>
+      <input id="unitField" type="text" name="unit" />
+      <input type="submit" value="Add Clone" />
+    </form>  
+  </section>
+      
+  <section id="top">
+    <p> Search for specific Clones</p>
     <select id="method">
       <option value="GET">GET</option>
       <option value="HEAD">HEAD</option>
@@ -218,22 +262,8 @@
     <button id="send">Send</button>
     <!--<button id="random">Random</button>-->
   </section>
-  <section id="top">
-      <p>Add your own Clone to the list!</p>
-  <form id="nameForm" action="/addClone" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="number">Number: </label>
-      <input id="numberField" type="number" name="number" min="0"/>
-      <br>
-      <label for="rank">Rank: </label>
-      <input id="rankField" type="text" name="rank" />
-      <label for="unit">Unit: </label>
-      <input id="unitField" type="text" name="unit" />
-      <input type="submit" value="Add Clone" />
-    </form>  
-  </section>
-  <section id="content">
-  </section>
+  
+  </div> 
+    
 </body>
 </html>

@@ -22,12 +22,14 @@ const cloneArchive = {
   },
 
   ayar: {
+      Name: 'Ayar',
     Number: 'Unknown',
     Rank: 'Private',
     Unit: 'Torrent Company',
   },
 
   boomer: {
+      Name: 'Boomer',
     Number: 'CS-2207',
     Rank: 'Sergeant',
     Unit: '501st',
@@ -35,6 +37,7 @@ const cloneArchive = {
   },
 
   boro: {
+      Name: 'Boro',
     Number: 'Unknown',
     Rank: 'Private',
     Unit: 'Torent Company',
@@ -42,6 +45,7 @@ const cloneArchive = {
   },
 
   bow: {
+      Name: 'Bow',
     Number: 'Unknown',
     Rank: 'Commander',
     Unit: '501st',

@@ -1,13 +1,27 @@
+  <style>
 html, body {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
 }
-
-#top {
+    
+      
+#top, #add {
   text-align: center;
-  margin: 0 auto;
+  margin: auto;
+}
+
+content {
+  background: lightblue;
+}
+
+body{
+    background: #aaa;
+}
+      
+label, input{
+  margin-bottom: 5px;
 }
 
 #top h3 {
@@ -16,6 +30,10 @@ html, body {
 
 #title h1 {
   font-size: 4em;
+  text-align: center;
+  margin: 0 auto;
+  background: blue;
+  color: aliceblue;
 }
 
 #content {
@@ -23,3 +41,43 @@ html, body {
   font-size: 2em;
   text-align: center;
 }
+      
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 0px;
+  text-align: center;
+}
+      
+.column > p {
+  font-size: 2em;
+}
+      
+.btn {
+  border: none;
+  background-color: inherit;
+  padding: 14px 40%;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+}
+      
+div.sticky {
+ width: 100%;
+  position: fixed;
+  bottom: 0px;
+  border: 3px solid #8AC007;
+} 
+      
+      #list{
+              padding-bottom: 300px;
+
+      }
